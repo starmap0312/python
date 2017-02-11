@@ -3,7 +3,11 @@
 #   next()
 # iterable: a class that provides its iterator with the following method
 #   __iter__()
-
+# we can use for loop to iterate the elements of an iterable
+#   ex.
+#   for e in Iterable():
+#       print(e)
+#
 # example: a class that is both iterable and the itorator
 class Iterable(object):
 
