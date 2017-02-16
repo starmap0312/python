@@ -9,6 +9,8 @@ parser.add_argument('--varname', help='named argument varname')
 parser.add_argument('var2', help='2nd positional argument', default = 0)
 parsed_args = parser.parse_args(args)
 
-# python test.py 1 --varname value two
+# python arg_parse.py 1 --varname value two
 #   Namespace(var1='1', var2='two', varname='value')
-print(parsed_args)
+print(parsed_args.var1)
+print(parsed_args.var2)
+print(parsed_args.varname)
