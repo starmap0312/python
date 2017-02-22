@@ -13,15 +13,13 @@ async def get_json(client, url):
         return await response.read()
 
 async def get_reddit_top(subreddit, client):  
-    data1 = await get_json(client, 'https://www.reddit.com/r/' + subreddit + '/top.json?sort=top&t=day&limit=5')
-
-    j = json.loads(data1.decode('utf-8'))
-    for i in j['data']['children']:
-        score = i['data']['score']
-        title = i['data']['title']
-        link = i['data']['url']
+    data = await get_json(client, 'https://www.reddit.com/r/' + subreddit + '/top.json?sort=top&t=day&limit=5')
+    jsn = json.loads(data.decode('utf-8'))
+    for obj in jsn['data']['children']:
+        score = obj['data']['score']
+        title = obj['data']['title']
+        link = obj['data']['url']
         print(str(score) + ': ' + title + ' (' + link + ')')
-
     print('DONE:', subreddit + '\n')
 
 def signal_handler(signal, frame):  
