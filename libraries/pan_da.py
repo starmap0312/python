@@ -15,12 +15,20 @@ print "2.1) creating a DataFrame by passing a numpy array, with a datetime index
 rng = pd.date_range('20160701', periods=6)
 print rng
 
-df = pd.DataFrame(np.random.randn(len(rng), len(list('ABCD'))), index=rng, columns=list('ABCD'))
+df = pd.DataFrame(
+    np.random.randn(len(rng), len(list('ABCD'))),
+    index=rng,
+    columns=list('ABCD')
+)
 print df
 
 # append a row to the data frame
 print 'append a row to data frame'
-row = pd.Series(['X', 'X', 'X', 'X'], index=['A', 'B', 'C', 'D'], name=pd.to_datetime('20160707'))
+row = pd.Series(
+    ['X', 'X', 'X', 'X'],
+    index=['A', 'B', 'C', 'D'],
+    name=pd.to_datetime('20160707')
+)
 print df.append(row)
 
 # remove a row from the data frame
@@ -37,12 +45,16 @@ print ts
 
 print "2.2) creating a DataFrame by passing a dict of objects that can be converted to series-like"
 
-df2 = pd.DataFrame({ 'A' : 1.,
-                     'B' : pd.Timestamp('20130102'),
-                     'C' : pd.Series(1,index=list(range(4)),dtype='float32'),
-                     'D' : np.array([3] * 4,dtype='int32'),
-                     'E' : pd.Categorical(["test","train","test","train"]),
-                     'F' : 'foo' })
+df2 = pd.DataFrame(
+    {
+        'A' : 1.,
+        'B' : pd.Timestamp('20130102'),
+        'C' : pd.Series(1,index=list(range(4)),dtype='float32'),
+        'D' : np.array([3] * 4,dtype='int32'),
+        'E' : pd.Categorical(["test","train","test","train"]),
+        'F' : 'foo' 
+    }
+)
 print df2
 print df2.dtypes
 

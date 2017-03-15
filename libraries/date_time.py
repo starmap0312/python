@@ -1,6 +1,8 @@
 from datetime import datetime
 import pytz
 
+print(datetime.now())
+
 print("instantiate a datetime object")
 dt = datetime(2016, 10, 8, 5, 18, 20)
 print(dt)
