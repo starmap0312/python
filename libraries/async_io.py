@@ -22,17 +22,21 @@
 #         loop.run_until_complete(async_func())
 #         loop.close()
 #    ex2. loop = asyncio.get_event_loop()
-#         tasks = [ asyncio.ensure_future(async_func(1)), asyncio.ensure_future(async_func(2)), asyncio.ensure_future(async_func(3)) ]
+#         tasks = [
+#             asyncio.ensure_future(async_func(1)),
+#             asyncio.ensure_future(async_func(2)),
+#             asyncio.ensure_future(async_func(3))
+#         ]
 #         loop.run_until_complete(asyncio.gather(*tasks))
 #         loop.close()
 
 import asyncio
 
 # two ways to define a coroutine function (effectively equivalent in type)
-# 1) use async:
+# 1) use async: (Python3.5+)
 async def ping_server(ip):
     pass
-# 2) use @asyncio.coroutine decorator:
+# 2) use @asyncio.coroutine decorator: (Python3.4-)
 @asyncio.coroutine
 def load_file(path):
     pass
@@ -54,7 +58,7 @@ print("Is coroutine object: {}".format(asyncio.iscoroutine(load_file_obj)))
 def get_json(client, url):  
     file_content = yield from load_file('/tmp/filename')
 # 2) async/await: (primary syntax)
-#    awaits releases the thread of execution (yield control) and wait for ping_server() completion
+#    awaits releases the thread of execution (yield control to the caller) and wait for ping_server() completion
 #    a) await a coroutine object's completion 
 #    b) "async" is used to define a native coroutine function and "await" is used to "yield control" in place of "yeild from"
 async def ping_local():  
@@ -69,6 +73,7 @@ print("event loop")
 async def speak_async():  
     print('Hello asynchronicity!')
 loop = asyncio.get_event_loop()          # get the default event loop 
-loop.run_until_complete(speak_async())   # schedule and run the async task (blocking: will not return until speak_async() is done)
+loop.run_until_complete(speak_async())   # schedule and run the async task
+                                         # (blocking: will not return until speak_async() is done)
 loop.close()                             # close the event loop
 
