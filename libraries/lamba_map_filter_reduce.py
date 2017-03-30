@@ -49,3 +49,7 @@ fibonacci_list = [ 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 ]
 odd_fibonacci_list = list(filter(lambda x: x % 2, fibonacci_list))
 print(odd_fibonacci_list)
 
+print("5) reduce():")
+# 5) functools.reduce(function, iterable):
+import functools
+print(functools.reduce(lambda x, y: x + y, odd_fibonacci_list))
