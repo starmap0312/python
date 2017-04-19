@@ -41,25 +41,27 @@ while not q.empty():
 # 3) Using Queues with Threads
 import time
 from threading import Thread
+
+num_threads = 2
+feed_urls = [ 'http://www.castsampler.com/cast/feed/rss/guest1',
+              'http://www.castsampler.com/cast/feed/rss/guest2',
+              'http://www.castsampler.com/cast/feed/rss/guest3', ]
 q = Queue.Queue()
-num_fetch_threads = 2
-feed_urls = [ 'http://www.castsampler.com/cast/feed/rss/guest', ]
+for url in feed_urls:
+    q.put(url)
 
 def download(i, q):
     while True:
-        url = q.get()
+        url = q.get() # each get() used to fetch a task 
         print('{0}: Downloading: {1}'.format(i, url))
         # instead of really downloading the URL, we just pretend and sleep
         time.sleep(i + 2)
-        q.task_done()
+        q.task_done() # subsequent call to task_done() tells the queue that the processing on the task is complete
 
-for i in range(num_fetch_threads):
+for i in range(num_threads):
     worker = Thread(target=download, args=(i, q,))
     worker.setDaemon(True)
     worker.start()
 
-for url in feed_urls:
-    q.put(url)
-
-# main thread (block-)waiting
-q.join()
+# main thread blocking (waiting for the tasks in the queue to be completed)
+q.join()              # a join() is currently blocking, it will resume when all items have been processed 
