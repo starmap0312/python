@@ -48,11 +48,11 @@ feed_urls = [ 'http://www.castsampler.com/cast/feed/rss/guest1',
               'http://www.castsampler.com/cast/feed/rss/guest3', ]
 q = Queue.Queue()
 for url in feed_urls:
-    q.put(url)
+    q.put(url)        # task items been put() into the queue
 
 def download(i, q):
     while True:
-        url = q.get() # each get() used to fetch a task 
+        url = q.get() # each get() is used to fetch a task 
         print('{0}: Downloading: {1}'.format(i, url))
         # instead of really downloading the URL, we just pretend and sleep
         time.sleep(i + 2)
@@ -60,7 +60,7 @@ def download(i, q):
 
 for i in range(num_threads):
     worker = Thread(target=download, args=(i, q,))
-    worker.setDaemon(True)
+    worker.setDaemon(True) # threads will be terminated when the main thread ends
     worker.start()
 
 # main thread blocking (waiting for the tasks in the queue to be completed)
