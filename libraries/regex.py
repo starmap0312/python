@@ -1,8 +1,9 @@
 import re
 
-line = "pattern1 are pattern2 pattern3"
+pattern = r'(.*) arE (.*?) .*'
+text = "pattern1 are pattern2 pattern3"
 
-matchObj = re.match( r'(.*) arE (.*?) .*', line, re.M|re.I)
+matchObj = re.match(pattern, text, re.M|re.I)
 # re.M:
 #   this makes $ match the end of a line and ^ match the start of any line
 # re.I:
