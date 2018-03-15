@@ -9,6 +9,23 @@
 #       print(e)
 #
 # example: a class that is both iterable and the itorator
+
+class Iterator(object):
+
+    def __init__(self, last=1, size=5):
+        self.last = last
+        self.size = size  #cutoff
+
+    def has_next(self):
+        return self.last <= self.size
+
+    def next(self):
+        num = self.last
+        if not self.has_next():
+            raise StopIteration()
+        self.last += 1
+        return num
+
 class Iterable(object):
 
     def __init__(self, last=1, size=5):
@@ -16,14 +33,7 @@ class Iterable(object):
         self.size = size  #cutoff
 
     def __iter__(self):
-        return self
-
-    def next(self):
-        num = self.last
-        if num > self.size:
-            raise StopIteration()
-        self.last = num + 1
-        return num
+        return Iterator(self.last, self.size)
 
 # for-looping an iterable
 print('use for-loop to traverse items of the iterable')
