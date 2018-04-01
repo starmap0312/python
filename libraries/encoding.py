@@ -28,10 +28,14 @@ print
 print('中文')                                      # 中文                       (a str object of utf8 char)
 print(repr('中文'))                                # '\xe4\xb8\xad\xe6\x96\x87'
 print(type('中文'))                                # <type 'str'>
+print(len('中文'))                                 # 6 (6 raw bytes) 
+print(repr('中文'[1]))                             # '\xb8' (handle the str object in the byte level)
 print
 print(u'中文')                                     # 中文                       (a unicode object)
 print(repr(u'中文'))                               # u'\u4e2d\u6587'
 print(type(u'中文'))                               # <type 'unicode'>
+print(len(u'中文'))                                # 2 (2 code points) 
+print(u'中文'[1])                                  # '文' (handle the unicode object in the code point level)
 print
 print(u'中文'.encode('utf8'))                      # 中文 (encode() converts a unicode object into a str object)
 print(repr(u'中文'.encode('utf8')))                # '\xe4\xb8\xad\xe6\x96\x87' (we encode using the right utf8 codec)
