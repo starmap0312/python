@@ -16,3 +16,13 @@ if matchObj:
    print "matchObj.group(2) : ", matchObj.group(2) # group(2): returns matched pattern of the second subgroup enclosed by ()
 else:
    print "No match!!"
+
+
+# replace all non-word characters
+print re.sub(r'\W+', ' ', 'hello;`1`23~!#world') # hello 1 23 word
+
+
+# replace a set of keywords, ex. keyword -> <b>keyword</b>
+keywords = ['hello', 'world']
+pattern = re.compile("|".join(keywords)) # "hello|world"
+print pattern.sub(lambda m: '<b>{0}</b>'.format(re.escape(m.group(0))), "Hi, helloxxxmyworld!") # Hi, <b>hello</b>xxxmy<b>world</b>!
