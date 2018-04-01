@@ -52,14 +52,13 @@ print(repr(u'中文'.encode('utf8').decode('utf8'))) # u'\u4e2d\u6587'
 print(type(u'中文'.encode('utf8').decode('utf8'))) # <type 'unicode'>
 print
 
-# example: UnicodeDecodeError
-#print('中文'.encode('utf8'))                      # 
+# UnicodeDecodeError
+# ex. print('中文'.encode('utf8'))                 # you should not encode str object: encode is for unicode object
 # UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
-# 1) encode() converts a "unicode" object into a "str" object
-#    but here you have invoked it on a string object (because we do not have the u'')
-#    so python has to convert the string to a unicode object first
-#    python implicitly does the following for you:
-#print('中文'.decode().encode('utf8'))             # decode the str object using the ascii codec 
-#    that is why we get UnicodeDecodeError
-# 2) to fix the issue, we need to decode the str object using the right codec, i.e. utf8 codec 
+# 1) encode() converts a "unicode" object into a "str" object (ex. when you want to print it out)
+#    but if you invoke it on a str object (without the u'')
+#    python will convert the str object into a unicode object using decode() for you implicitly:
+#      ex. print('中文'.decode().encode('utf8'))             # decode the str object using the ascii codec 
+#          therefore, you get UnicodeDecodeError as the str object cannot be decoded as ascii codec
+# 2) to fix the issue, you need to decode the str object using the right codec, i.e. utf8
 print('中文'.decode('utf8').encode('utf8'))        # 中文 
