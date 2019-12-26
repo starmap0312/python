@@ -1,4 +1,8 @@
-# pip3 install pyarrow
+# Apache Arrow is an in-memory data structure mainly for use by engineers for building data systems
+#   it facilitates communication between many components: ex. read file -> Python pandas -> Spark data frame
+#   it provides fast data interchange between systems without the serialization costs of systems like Thrift and Protocol Buffers
+# Installation
+#   pip3 install pyarrow
 import pyarrow as pa
 
 # py_buffer([data]):
@@ -128,6 +132,16 @@ print(np_array)
 # [0.86004504 0.53987214 0.56330477 0.72354143 0.25070862 0.00563462]
 
 # 6) arrow + pandas
+#    drawbacks of Pandas are overcome by Arrow:
+#    a) no support for memory-mapped data items
+#       in Pandas, data must be loaded entirely into RAM to be processed
+#    b) poor performance in file ingest or export
+#       Arrow is an ideal container for inbound columnar storage formats like Apache Parquet
+#    c) lack of memory use, RAM management
+#       in pandas, all memory is owned by NumPy or by Python interpreter (difficult to measure the memory use)
+#    d) appending data to a Data frame is costly
+#       in pandas, all data in a column in a Data Frame must be calculated in the same NumPy array (too restrictive)
+#       in Arrow, appending a table is a zero copy operation, requiring no memory allocation
 import pandas as pd
 df = pd.DataFrame(data=np.random.randint(1, 2, (2, 4)), columns=["column_a", "column_b", "column_c", "column_d"])
 print(df)
