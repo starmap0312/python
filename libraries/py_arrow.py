@@ -61,10 +61,9 @@ fin.close()
 # 3) On-Disk and Memory Mapped Files: OSFile([filepath], wb):
 #      this allows to interact with data on disk
 # a) using standard operating system-level file APIs:
-
 with open('example2.dat', 'wb') as fout:
     fout.write(b'some example data')
-# b) using sing pyarrow’s OSFile class:
+# b) using sing pyarrow's OSFile class:
 with pa.OSFile('example3.dat', 'wb') as fout:
     fout.write(b'some example data')
 # For reading files, you can use OSFile or MemoryMappedFile:
