@@ -38,7 +38,7 @@ print(pa.total_allocated_bytes()) # 0
 #   this allows creating a readable NativeFile from various kinds of sources
 # a) if passed a Buffer or a memoryview object:
 data = b'some data'
-buf = pa.py_buffer(data) # a Buffer
+buf = pa.py_buffer(data) # a Buffer: this does not allocate any memory
 #buf = memoryview(b"some data") # a memoryview object
 stream = pa.input_stream(buf)
 print(stream.read(4)) # b'some'
@@ -58,6 +58,12 @@ fin = open('example1.dat', 'rb')
 print(fin.read()) # b'some data'
 fin.close()
 
+# What is Memory-mapping?
+#   it is a way for a process to access the file
+#   a process can map a file's contents (or its subset) into its address space
+#   this makes it easier to read from and write to the file, by reading and writing in memory
+#   the file itself, on disk, is just the same as any other file
+
 # 3) On-Disk and Memory Mapped Files: OSFile([filepath], wb):
 #      this allows to interact with data on disk
 # a) using standard operating system-level file APIs:
@@ -72,20 +78,22 @@ with pa.OSFile('example3.dat', 'wb') as fout:
 # a) OSFile([filepath]):
 file_obj = pa.OSFile('example2.dat')
 print(file_obj.read(4)) # b'some': this allocates new memory when read
-# b) memory_map([filepath]):
+# note:
+#   using OSFile for read() & write() is more efficient than using standard operating system-level file APIs
+
+# b) memory_map([filepath]): this opens the memory map at file path
 mmap = pa.memory_map('example3.dat')
-print(mmap.read(4))     # b'some': this DOES NOT allocate new memory, as it references the maaped memory when read
+print(mmap.read(4))        # b'some': this DOES NOT allocate new memory, as it references the maaped memory when read
 
 # read() vs. read_buffer()
 # read(): this implements the standard Python file read API
 # read_buffer(): this reads into an Arrow Buffer object
 print(mmap.seek(0)) # 0
-buf = mmap.read_buffer(4)
-print(buf) # <pyarrow.lib.Buffer object at 0x10cfc3960>
-print(buf.to_pybytes()) # b'some'
+buf = mmap.read_buffer(4) # <pyarrow.lib.Buffer object at 0x10cfc3960>: this does not allocate any memory
+print(buf.to_pybytes()) # b'some': this allocates new memory
 
 # 4) In-Memory Reading and Writing
-#   for serialization and deserialization of in-memory data
+#   for serialization and deserialization of in-memory data (arrow is more efficient than pickle)
 writer = pa.BufferOutputStream() # for in-memory writing
 print(writer.write(b'hello, friends')) # 14
 buf = writer.getvalue()
@@ -94,3 +102,53 @@ print(buf.size) # 14
 reader = pa.BufferReader(buf) # for in-memory reading
 print(reader.seek(7)) # 7
 print(reader.read(7)) # b'friends'
+
+# 5) arrow + numpy
+import numpy as np
+data = np.random.random((3, 2))
+print(data)
+# [[0.3346962  0.25842736]
+#  [0.37600096 0.71404968]
+#  [0.1538029  0.63056035]]
+data = data.reshape(-1)
+print(data)
+# [0.3346962  0.25842736 0.37600096 0.71404968 0.1538029  0.63056035]
+pa_array = pa.array(data) # <pyarrow.lib.DoubleArray object at 0x7f467b68aea8>
+print(pa_array)
+# [
+#   0.863989,
+#   0.964546,
+#   0.711622,
+#   0.282656,
+#   0.383822,
+#   0.0271719
+# ]
+np_array = pa_array.to_numpy()
+print(np_array)
+# [0.86004504 0.53987214 0.56330477 0.72354143 0.25070862 0.00563462]
+
+# 6) arrow + pandas
+import pandas as pd
+df = pd.DataFrame(data=np.random.randint(1, 2, (2, 4)), columns=["column_a", "column_b", "column_c", "column_d"])
+print(df)
+#     column_a  column_b  column_c  column_d
+#  0         1         1         1         1
+#  1         1         1         1         1
+pa_df = pa.Table.from_pandas(df) # pyarrow.Table
+print(pa_df) # pyarrow.Table
+pd_df = pa_df.to_pandas()
+print(pd_df)
+#     column_a  column_b  column_c  column_d
+#  0         1         1         1         1
+#  1         1         1         1         1
+
+# 7) arrow + csv
+from pyarrow import csv
+table = csv.read_csv('py_arrow.csv') # pyarrow.Table
+print(table)
+pd_df = pa_df.to_pandas()
+print(pd_df)
+#     column_a  column_b  column_c  column_d
+#  0         1         1         1         1
+#  1         1         1         1         1
+
