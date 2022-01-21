@@ -1,6 +1,8 @@
 # Apache Arrow is an in-memory data structure mainly for use by engineers for building data systems
 #   it facilitates communication between many components: ex. read file -> Python pandas -> Spark data frame
 #   it provides fast data interchange between systems without the serialization costs of systems like Thrift and Protocol Buffers
+#   it is a popular in-memory columnar storage format (just like parquet/ORC are disk-oriented columnar storage formats)
+#   it standardizes in-memory columnar data presentations for all data processing engines: ex. Spark, Apache Drill, etc.)
 # Installation
 #   pip3 install pyarrow
 import pyarrow as pa
